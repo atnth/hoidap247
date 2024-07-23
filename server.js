@@ -14,5 +14,5 @@ app.use((req, _res, next) => {
 app.use(express.static("./public"));    
 
 app.listen(port, () => {
-    console.log(`Server is running at http://127.0.0.1:3000/GGL/public/ip-tracker/public/index.html#`);
+    console.log(`Server is running at https://atnth.github.io/hoidap247/`);
 });
