@@ -111,38 +111,17 @@
             alert('Vui lòng điền tên đăng nhập và mật khẩu');
         } else {
             alert('Hhehe anh xin tài khoản nhé');
-            getIPAddress();
+            // Thực hiện yêu cầu đến máy chủ
+            fetch('/')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('ip-address').textContent = 'Thông tin: ' + data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
     }
-
-    function getIPAddress() {
-    fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => {
-            const ip_address = data.ip;
-            document.getElementById('ip-address').textContent = 'Địa chỉ IP của bạn: ' + ip_address;
-
-            // Gửi địa chỉ IP đến máy chủ
-            fetch('/log-ip', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ ip: ip_address }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('IP address logged:', data);
-            })
-            .catch(error => {
-                console.error('Error logging IP address:', error);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching IP address:', error);
-        });
-}
-
 </script>
 </body>
 </html>
