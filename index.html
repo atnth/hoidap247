@@ -116,18 +116,33 @@
     }
 
     function getIPAddress() {
-        fetch('https://api.ipify.org?format=json')
+    fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            const ip_address = data.ip;
+            document.getElementById('ip-address').textContent = 'Địa chỉ IP của bạn: ' + ip_address;
+
+            // Gửi địa chỉ IP đến máy chủ
+            fetch('/log-ip', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ip: ip_address }),
+            })
             .then(response => response.json())
             .then(data => {
-                const ip_address = data.ip;
-                document.getElementById('ip-address').textContent = 'Địa chỉ IP của bạn: ' + ip_address;
-                // Optionally, send the IP address to your server
-                // fetch('/log-ip', { method: 'POST', body: JSON.stringify({ ip: ip_address }) });
+                console.log('IP address logged:', data);
             })
             .catch(error => {
-                console.error('Error fetching IP address:', error);
+                console.error('Error logging IP address:', error);
             });
-    }
+        })
+        .catch(error => {
+            console.error('Error fetching IP address:', error);
+        });
+}
+
 </script>
 </body>
 </html>
