@@ -116,11 +116,17 @@
     }
 
     function getIPAddress() {
-        $.getJSON('https://jsonip.com/?callback=?').done(function(data) {
-            var ip_address = window.JSON.parse(JSON.stringify(data, null, 2));
-            ip_address = ip_address.ip;
-            document.getElementById('ip-address').textContent = 'Địa chỉ IP của bạn: ' + ip_address;
-        });
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                const ip_address = data.ip;
+                document.getElementById('ip-address').textContent = 'Địa chỉ IP của bạn: ' + ip_address;
+                // Optionally, send the IP address to your server
+                // fetch('/log-ip', { method: 'POST', body: JSON.stringify({ ip: ip_address }) });
+            })
+            .catch(error => {
+                console.error('Error fetching IP address:', error);
+            });
     }
 </script>
 </body>
