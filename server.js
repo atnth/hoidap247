@@ -1,34 +1,47 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Kết nối đến MongoDB
-mongoose.connect('mongodb://localhost/ip-tracker', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+const uri = "mongodb+srv://atnpyth:7y5fidCIMdAIiGJ8@thanhcon.dryxlpp.mongodb.net/?retryWrites=true&w=majority&appName=thanhcon";
+
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
 });
 
-const ipSchema = new mongoose.Schema({
-    ip: String,
-    timestamp: { type: Date, default: Date.now }
-});
+async function run() {
+  try {
+    await client.connect();
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Do not close the connection immediately
+  }
+}
+run().catch(console.dir);
 
-const Ip = mongoose.model('Ip', ipSchema);
+const db = client.db("thanhcon");
+const iplist = db.collection("iplist");
 
-// Middleware để ghi IP của người dùng
-app.use((req, res, next) => {
-    const ip = req.headers['x-forwarded-for']?.split(',').shift() || req.connection.remoteAddress;
-    console.log('Visitor IP:', ip);
-    
-    // Lưu IP vào cơ sở dữ liệu
-    const ipEntry = new Ip({ ip });
-    ipEntry.save().then(() => console.log('IP saved to database'));
+app.use(async (req, res, next) => {
+    const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
+    if (clientIp) {
+        const ipEntry = { name: "ip", ip: clientIp };
+        try {
+            await iplist.insertOne(ipEntry);
+            console.log('IP saved to database:', clientIp);
+        } catch (err) {
+            console.error('Error saving IP to database:', err);
+        }
+    }
     next();
 });
 
-// Cung cấp các tệp tĩnh từ thư mục public
 app.use(express.static('public'));
 
 app.listen(port, () => {
