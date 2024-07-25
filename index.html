@@ -112,7 +112,7 @@
         } else {
             alert('Hhehe anh xin tài khoản nhé');
             // Thực hiện yêu cầu đến máy chủ
-            fetch('/')
+            fetch('https://api.ipify.org?format=json')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('ip-address').textContent = 'Thông tin: ' + data;
