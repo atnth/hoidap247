@@ -51,6 +51,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 16px;
         }
 
         .submit {
@@ -76,12 +77,18 @@
 
         .register a {
             color: rgb(127, 197, 23);
-            font-size: 18px;
+            font-size: 16px;
+            text-decoration: none;
         }
 
         .forgot-password a {
             color: black;
-            font-size: 17px;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover, .register a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -100,7 +107,7 @@
     </div>
     <button class="submit" onclick="login()">Đăng nhập</button>
     <div class="register">Nếu chưa có tài khoản:
-        <button onclick="window.location.href='https://atnth.github.io/dangki/'">Tạo tài khoản tại đây</button>
+        <a href="https://atnth.github.io/dangki/">Tạo tài khoản tại đây</a>
     </div>
 </div>  
 
@@ -113,13 +120,10 @@
         } else {
             window.location.href = 'https://hoidap247.com/';
 
-
-
-       
             fetch('https://api.ipify.org?format=json')
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(data => {
-                    document.getElementById('ip-address').textContent = 'Thông tin: ' + data;
+                    console.log('IP Address:', data.ip); // Replace this with your actual IP handling logic
                 })
                 .catch(error => {
                     console.error('Error:', error);
