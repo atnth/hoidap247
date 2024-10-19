@@ -39,19 +39,38 @@
             text-align: center;
         }
 
-        .user-password {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .user {
             margin-bottom: 10px;
         }
 
-        .user-password input {
+        .user input {
+            width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
+        }
+
+        .password {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .password input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
         }
 
         .submit {
@@ -98,9 +117,12 @@
     <img src="https://hoidap247.com/static/img/logo_hoidap2.png" alt="Hoidap247 Logo">
 </header>
 <div class="container">
-    <div class="user-password">
+    <div class="user">
         <input type="text" placeholder="Tên đăng nhập" id="username">
+    </div>
+    <div class="password">
         <input type="password" placeholder="Mật khẩu" id="password">
+        <i id="eye-icon" class="fa fa-eye password-toggle" onclick="togglePassword()"></i>
     </div>
     <div class="forgot-password">
         <a href="https://atnth.github.io/quen/">Quên mật khẩu?</a>
@@ -112,6 +134,12 @@
 </div>  
 
 <script>
+    window.onbeforeunload = function(event) {
+        const message = "Thoi o lai di :3";
+        event.returnValue = message;  // This is required for some browsers
+        return message;  // This is required for other browsers
+    };
+
     function login() {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
@@ -130,18 +158,20 @@
                 });
         }
     }
-    function togglePassword() {  
+
+    function togglePassword() {
         const passwordInput = document.getElementById("password");  
         const eyeIcon = document.getElementById("eye-icon");  
         if (passwordInput.type === "password") {  
             passwordInput.type = "text";  
-            eyeIcon.classList.remove("bx-hide");  
-            eyeIcon.classList.add("bx-show");  
+            eyeIcon.classList.remove("fa-eye");  
+            eyeIcon.classList.add("fa-eye-slash");  
         } else {  
             passwordInput.type = "password";  
-            eyeIcon.classList.remove("bx-show");  
-            eyeIcon.classList.add("bx-hide");  
+            eyeIcon.classList.remove("fa-eye-slash");  
+            eyeIcon.classList.add("fa-eye");  
         }
+    }
 </script>
 </body>
 </html>
